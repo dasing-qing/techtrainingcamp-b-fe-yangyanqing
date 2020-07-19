@@ -18,12 +18,13 @@
 ## 部署环境
 暂无
 ## 目录结构描述
-### ├── Readme.md // help
-### ├── swiper // swiper插件包
-### │   ├──swiper.css
-### │   ├──swiper.js
-### │   ├──swiper.min.css
-### │   └──swiper.min.js
-### ├── jquery-3.5.1.js // 引入jquery文件
-### ├── project.css // css文件
-### └── project.html // html文件
+###  ├── Readme.md // help
+###  ├── outsource //工程文件
+###  │  ├── swiper // swiper插件包
+###  │  │   ├──swiper.css
+###  │  │   ├──swiper.js
+###  │  │   ├──swiper.min.css
+###  │  │   └──swiper.min.js
+###  │  ├── jquery-3.5.1.js // 引入jquery文件
+###  │  ├── project.css // css文件
+###  │  └── project.html // html文件

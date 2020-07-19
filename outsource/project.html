@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>简易版头条搜索
+    </title>
+    <script src="./jquery-3.5.1.js"></script>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css" /> -->
+    <!-- swiper插件 -->
+    <link rel="stylesheet" type="text/css" href="./swiper/swiper.min.css">
+    <script type="text/javascript" src="./swiper/swiper.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="./project.css">
+    </link>
+</head>
+
+<body>
+    <!-- 搜索框和结果模块 -->
+    <div class="main">
+        <input id="text" oninput="searchBoxInput(event)" name="keywords" placeholder="请您输入搜索内容" class="search_box">
+        <input onclick="getInformation()" type="button" value="头条搜索" class="search_btn">
+        <div id="word" style="height: 200px; width: 100%; overflow: auto;" class="ui-widget-content"></div>
+    </div>
+    <!-- 轮播图模块 -->
+    <div class="swiper-container" id="swiper">
+        <div class="swiper-wrapper" id="swiper-wrapper">
+            <!-- <div class="swiper-slide">Slide 1</div>
+            <div class="swiper-slide">Slide 2</div>
+            <div class="swiper-slide">Slide 3</div> -->
+        </div>
+        <!-- 如果需要分页器 -->
+        <!-- <div class="swiper-pagination"></div> -->
+
+        <!-- 如果需要导航按钮 -->
+        <!-- <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div> -->
+
+        <!-- 如果需要滚动条 -->
+        <!-- <div class="swiper-scrollbar"></div> -->
+    </div>
+    <!-- <div id="el">
+        <form action="" class="result">
+            <div id="ul">
+                <div id="title"> </div>
+            </div>
+        </form>
+        <h2 class="animate__animated animate__bounce">An animated element</h2>
+        <div class="animate__animated animate__bounce animate__delay-2s">Example</div>
+    </div> -->
+    <div class="float-text" id="float-title">
+        文字出来啊
+    </div>
+    <script>
+        $(function () {
+            //当键盘键被松开时发送Ajax获取数据
+            // $('#text').keyup(function () {
+            //     var keywords = $(this).val();
+            //     if (keywords == '') { $('#word').hide(); return };
+            //     $.ajax({
+            //         url: 'https://i.snssdk.com/search/api/sug/?keyword=' + keywords,
+            //         data: { get_param: 'value' },
+            //         dataType: 'json',
+            //         // jsonpCallback: 'fun', //回调函数名(值) value
+            //         // beforeSend:function(){
+            //         //  $('#word').append('<div>正在加载。。。</div>');
+            //         // },
+            //         success: function (data) {
+            //             $('#word').empty().show();
+            //             // if (data.data=='')
+            //             // {
+            //             //  $('#word').append('<div class="error">Not find  "' + keywords + '"</div>');
+            //             // }
+            //             var i = data.data.length;
+            //             while (i--) {
+            //                 $('#word').append('<div class="click_work">' + data.data[i].keyword + '<div/>');
+            //                 var message = data.data[i].keyword;
+            //             }
+            //             // $.each(data.data, function(){
+            //             //  $('#word').append('<div class="click_work">'+ this +'</div>');
+            //             // })
+            //         },
+            //         error: function () {
+            //             $('#word').empty().show();
+            //             $('#word').append('<div class="click_work">Fail "' + keywords + '"</div>');
+            //         }
+            //     })
+            // })
+            //点击搜索数据复制给搜索框
+            $(document).on('click', '.click_work', function () {
+                var word = $(this).text();
+                $('#text').val(word);
+                $('#word').hide();
+                getInformation()
+                // $('#texe').trigger('click');触发搜索事件
+            })
+            $('body').click(() => {
+                $('#float-title').css('display', 'none')
+                return
+            })
+            // timer = setTimeout(function ()
+            // {
+            //     $.ajax ({
+
+            //     })
+            // },800)
+
+        });
+        // 输入框输入值改变事件
+        function searchBoxInput(e) {
+            if (!e.target.value) {
+                $('#swiper-wrapper').empty()
+                $('#word').empty()
+            } else {
+                getInformation()
+                // 判断输入词汇是否匹配官关键词
+                let keyWords = ['vue', 'react', 'webpack', 'npm']
+                console.log(e.target.value === '新生训练营')
+                if (e.target.value === '新生训练营') {
+                    $('#text').blur()
+                    $('#float-title').html('欢迎')
+                    $('#float-title').css('display', 'block')
+                } else if (keyWords.includes(e.target.value)) {
+                    $('#text').blur()
+                    $('#float-title').html(e.target.value)
+                    $('#float-title').css('display', 'block')
+                } else {
+                    $('#float-title').css('display', 'none')
+                }
+            }
+        }
+        // 关键词搜索
+        function getInformation() {
+            // $.get('url', '请求成功之后的回调函数');
+            // $.post('url', 'POST参数',  '请求成功之后的回调函数');
+            $.ajax({
+                // 请求地址
+                // val()获取输入框中的内容。
+                url: 'https://i.snssdk.com/search/api/study/?keyword=' + $('input').val(),
+
+                // 请求类型：GET/POST
+                type: 'GET',
+                // 请求参数，是一个字符串。
+                // data: '',
+                // 指定服务器返回的数据类型
+                dataType: 'json',
+                // 指定请求失败的回调函数
+                error: function (data, status) {
+                    console.log('请求失败：', status, data);
+                },
+                // 请求成功的回调函数
+                success: function (data) {
+                    // 提示列表
+                    $('#word').empty().show();
+                    // 请求成功，得到json数据，解析json数据，将数据展示到页面中。
+                    let i = data.data.length;
+                    $('#swiper-wrapper').empty()
+                    while (i--) {
+                        // $('#ul').append('<p>' + data.data[i].title + '</>');
+                        // $('#ul').append('<p>' + data.data[i].description + '</>');
+                        $('#swiper-wrapper').append(`<div class="swiper-slide"><p>${data.data[i].title}</p><p>${data.data[i].description}</p></div>`);
+                        $('#word').append('<div class="click_work">' + data.data[i].title + '<div/>');
+                        // $('#swiper-wrapper').append(`<div class="swiper-slide"></div>`);
+                        //var message= data.data[i].keyword; 
+                    }
+                    console.log('请求成功：', data);
+
+                },
+
+                // 发起请求的方式：同步(false)还是异步(true)
+                async: true
+            });
+        }
+    </script>
+    <!-- 初始化swiper -->
+    <script>
+        $(document).ready(function () {
+            var mySwiper = new Swiper('.swiper-container', {
+                // direction: 'vertical', // 垂直切换选项
+                observer: true,//修改swiper自己或子元素时，自动初始化swiper 
+                observeParents: false,
+                loop: true, // 循环模式选项
+                // 如果需要分页器
+                // pagination: {
+                //     el: '.swiper-pagination',
+                // },
+
+                // 如果需要前进后退按钮
+                // navigation: {
+                //     nextEl: '.swiper-button-next',
+                //     prevEl: '.swiper-button-prev',
+                // },
+
+                // // 如果需要滚动条
+                // scrollbar: {
+                //     el: '.swiper-scrollbar',
+                // },
+            })
+        })        
+    </script>
+</body>
+<!--<script type="text/javascript">
+    window.onload=function(){
+        var param=decodeURI(location.search.split("=")[1]);
+        if(param!=="undefined"&&!!param){
+            document.querySelector(".search_box").value=param;
+        }
+        switch(param){
+            case "新兵训练营":
+                document.body.className="opr-texiao-welcome";
+                break;
+            case "旋转":
+                document.body.className="opr-texiao-rotate";
+                break;
+            case "反转":
+                document.body.className="opr-texiao-rotateY";
+                break;
+            default:
+                break;
+        }
+    }
+</script>-->
+</html>
